@@ -10,9 +10,9 @@ SRCDIR = src
 INCDIR = include
 OBJDIR = obj
 
-# File sorgenti
-SOURCES = $(wildcard $(SRCDIR)/*.cpp)
-OBJECTS = $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+# File sorgenti - DevNotes modularizzato
+SOURCES = src/main_new.cpp src/Window.cpp src/Layout.cpp
+OBJECTS = $(SOURCES:src/%.cpp=$(OBJDIR)/%.o)
 
 # Flag di compilazione per UI moderna
 CXXFLAGS = -std=c++17 -Wall -Wextra -I$(INCDIR) -DUNICODE -D_UNICODE

@@ -1,35 +1,71 @@
-# Windows Helper - Assistente per Windows ✅ FUNZIONANTE!
+# Windows Helper - Assistente per Windows
 
-Un'applicazione desktop C++ con interfaccia grafica per aiutare gli utenti di Windows.
+Un'applicazione desktop C++ con interfaccia grafica nativa per Windows.
 
-## ✅ Stato del Progetto
+## 🚀 **Stato del Progetto: COMPLETATO E FUNZIONANTE!**
 
-**🎉 PROGETTO COMPLETATO E FUNZIONANTE!**
+### Caratteristiche Attuali:
+- ✅ **Interfaccia grafica Windows nativa** con API Win32
+- ✅ **Compilazione ottimizzata** con MinGW-w64  
+- ✅ **Nessun errore di compilazione** o linting
+- ✅ **Ridimensionamento automatico** dei controlli
+- ✅ **Gestione eventi completa**
 
-- ✅ MinGW-w64 installato e configurato
-- ✅ Applicazione compilata con successo
-- ✅ Eseguibile WindowsHelper.exe creato
-- ✅ Interfaccia grafica Windows nativa funzionante
-- ✅ Visual Studio Code configurato per C++ development
+### Come Usare:
 
-## Come Eseguire l'Applicazione
-
-### Metodo 1: Esegui direttamente
+#### Esegui l'applicazione:
 ```cmd
 .\WindowsHelper.exe
 ```
 
-### Metodo 2: Compila ed esegui
+#### Compila l'applicazione:
 ```cmd
 .\build.bat
-.\WindowsHelper.exe
 ```
 
-### Metodo 3: Da VS Code
-- Premi `Ctrl+Shift+P`
-- Seleziona "Tasks: Run Task"
-- Scegli "Build Application"
-- Poi esegui l'applicazione
+#### Pulisci i file di build:
+```cmd
+.\clean.bat
+```
+
+### Funzionalità Implementate:
+- **Casella di testo** per inserire messaggi
+- **Bottone "Invia Messaggio"** per aggiungere testo alla lista
+- **Bottone "Pulisci Lista"** per svuotare la lista messaggi
+- **Lista scorrevole** che mostra tutti i messaggi inseriti
+- **Ridimensionamento responsive** dell'interfaccia
+
+## 🛠️ **Tecnologie Utilizzate:**
+- **Linguaggio**: C++17
+- **GUI**: Win32 API native
+- **Compilatore**: MinGW-w64 (GCC 15.1.0)
+- **Build System**: Makefile + Script Batch  
+- **IDE**: Visual Studio Code
+
+## 📁 **Struttura Progetto:**
+```
+prova/
+├── src/
+│   └── main.cpp           # Codice sorgente principale
+├── .vscode/               # Configurazione VS Code
+├── build.bat              # Script di compilazione
+├── clean.bat              # Script per pulizia
+├── Makefile               # Build system alternativo
+└── WindowsHelper.exe      # Eseguibile (dopo compilazione)
+```
+
+## 🎯 **Pronto per Nuove Funzionalità!**
+
+La base è solida e pronta per essere estesa con:
+- Monitor delle risorse di sistema
+- Utilità per la gestione file
+- Strumenti di rete
+- Automazione attività
+- E molto altro...
+
+---
+
+**Progetto creato con successo!** 🎉
 
 ## Funzionalità Attuali
 

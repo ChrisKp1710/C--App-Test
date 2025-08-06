@@ -4,34 +4,17 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/include",
-                "C:/msys64/mingw64/include/**",
-                "C:/msys64/mingw64/x86_64-w64-mingw32/include/**",
-                "C:/MinGW/include/**",
-                "C:/mingw64/include/**"
+                "C:/msys64/mingw64/include",
+                "C:/msys64/mingw64/include/c++/15.1.0"
             ],
             "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE",
-                "_WIN32_WINNT=0x0601",
-                "WINVER=0x0601",
-                "WIN32_LEAN_AND_MEAN"
+                "_WIN32",
+                "__MINGW32__"
             ],
-            "windowsSdkVersion": "10.0.19041.0",
             "compilerPath": "C:/msys64/mingw64/bin/g++.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "gcc-x64",
-            "browse": {
-                "path": [
-                    "${workspaceFolder}",
-                    "C:/msys64/mingw64/include",
-                    "C:/msys64/mingw64/x86_64-w64-mingw32/include",
-                    "C:/MinGW/include",
-                    "C:/mingw64/include"
-                ]
-            }
+            "intelliSenseMode": "gcc-x64"
         }
     ],
     "version": 4

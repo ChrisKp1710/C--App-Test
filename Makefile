@@ -1,9 +1,9 @@
-# Makefile per Windows Helper App
+# Makefile per DevNotes - Obsidian Clone
 # Compilatore
 CXX = g++
 
 # Nome dell'eseguibile
-TARGET = WindowsHelper.exe
+TARGET = DevNotes.exe
 
 # Directory
 SRCDIR = src
@@ -14,9 +14,9 @@ OBJDIR = obj
 SOURCES = $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS = $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
-# Flag di compilazione
-CXXFLAGS = -std=c++17 -Wall -Wextra -I$(INCDIR)
-LDFLAGS = -lgdi32 -luser32 -lkernel32 -lcomctl32
+# Flag di compilazione per UI moderna
+CXXFLAGS = -std=c++17 -Wall -Wextra -I$(INCDIR) -DUNICODE -D_UNICODE
+LDFLAGS = -lgdi32 -luser32 -lkernel32 -lcomctl32 -luxtheme
 
 # Flag per release/debug
 ifdef DEBUG

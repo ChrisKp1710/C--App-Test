@@ -93,7 +93,7 @@ void Layout::CreateDevNotesLayout(HWND hwnd)
     hPanelRight = CreateWindowEx(
         WS_EX_CLIENTEDGE, // Bordo elegante
         "STATIC",
-        "*** DevNotes Dashboard ***\n\n> Collegamenti in entrata:\n-> [[Welcome]] (2 references)\n-> [[Ideas]] (1 reference)\n\n> Tags utilizzati:\n-> #devnotes (3 notes)\n-> #markdown (2 notes)\n-> #knowledge (1 note)\n\n> Statistiche:\n-> 1 nota attiva [LIVE]\n-> 247 parole totali\n-> Ultima modifica: ora\n-> 3 collegamenti trovati\n\n> Quick Actions:\n-> Nuova nota [Ctrl+N]\n-> Ricerca globale [Ctrl+F]\n-> Reload UI [Ctrl+R] <<<\n-> Graph view [F6]",
+        "🌟 DevNotes Dashboard 🌟\n\n🔗 Collegamenti in entrata:\n→ [[Welcome]] (2 references)\n→ [[Ideas]] (1 reference)\n\n🏷️ Tags utilizzati:\n→ #devnotes (3 notes)\n→ #markdown (2 notes)\n→ #knowledge (1 note)\n\n📊 Statistiche:\n→ 1 nota attiva ✅\n→ 247 parole totali 📝\n→ Ultima modifica: ora ⏰\n→ 3 collegamenti 🔗\n\n🚀 Quick Actions:\n→ Nuova nota [Ctrl+N] 📄\n→ Ricerca globale [Ctrl+F] 🔍\n→ Reload UI [Ctrl+R] 🔄\n→ Graph view [F6] 🎨",
         WS_CHILD | WS_VISIBLE | SS_LEFT,
         600, 8, PANEL_RIGHT_WIDTH-16, 400,
         hwnd,
@@ -133,22 +133,22 @@ void Layout::CreateDevNotesLayout(HWND hwnd)
     // ModernUI::OriginalStaticProc = (WNDPROC)SetWindowLongPtr(hPanelRight, GWLP_WNDPROC, (LONG_PTR)ModernUI::ModernStaticProc);
 
     // Popola la sidebar con contenuto più ricco
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"[+] My Notes (4)");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  > Welcome.md");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  > Daily Notes.md");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  > Project Ideas.md");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  > Code Snippets.md");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"[+] Archive (2)");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  > Old Notes.md");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  > Experiments.md");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"[+] Templates (3)");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  > Meeting Template");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  > Project Template");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"[-] Quick Links");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"[-] Recent Searches");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"🌟 My Notes (4) ⭐");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Welcome.md 🎉");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Daily Notes.md 📅");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Project Ideas.md 💡");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Code Snippets.md 💻");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"🗃️ Archive (2) 📦");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Old Notes.md 🗂️");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Experiments.md 🧪");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"📋 Templates (3) ✨");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📄 Meeting Template 🤝");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📄 Project Template 🚀");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"🔗 Quick Links 🌐");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"🔍 Recent Searches 🕵️");
 
     // Status bar più informativo
-    SendMessage(hStatusBar, SB_SETTEXT, 0, (LPARAM)"DevNotes v1.0 | Ready | 247 words | 3 links | Last saved: now | Obsidian-style | Press Ctrl+R to reload");
+    SendMessage(hStatusBar, SB_SETTEXT, 0, (LPARAM)"🚀 DevNotes v1.0 | ✅ Ready | 📝 247 words | 🔗 3 links | 💾 Last saved: now | 🧠 Obsidian-style | 🔄 Ctrl+R to reload");
 
     // Focus sull'editor
     SetFocus(hEditorMain);

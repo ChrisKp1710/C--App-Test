@@ -83,12 +83,27 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
             switch (wParam)
             {
             case 'R':
-                // Ctrl+R = Reload UI (come nei browser web)
-                Layout::Cleanup();
-                Layout::CreateModernFonts();
-                Layout::CreateDevNotesLayout(hwnd);
-                InvalidateRect(hwnd, NULL, TRUE);
-                MessageBox(hwnd, "UI Reloaded! Premi Ctrl+R per ricaricare modifiche.", "DevNotes", MB_OK | MB_ICONINFORMATION);
+                // Ctrl+R = Hot Reload (riavvia con nuova versione)
+                {
+                    // Controlla se esiste una nuova versione
+                    if (GetFileAttributes("DevNotes_new.exe") != INVALID_FILE_ATTRIBUTES)
+                    {
+                        // Avvia la nuova versione
+                        ShellExecute(NULL, "open", "DevNotes_new.exe", NULL, NULL, SW_SHOW);
+                        
+                        // Chiudi questa versione
+                        PostQuitMessage(0);
+                    }
+                    else
+                    {
+                        // Fallback: reload UI normale
+                        Layout::Cleanup();
+                        Layout::CreateModernFonts();
+                        Layout::CreateDevNotesLayout(hwnd);
+                        InvalidateRect(hwnd, NULL, TRUE);
+                        MessageBox(hwnd, "UI Reloaded! (No new version found)", "DevNotes", MB_OK | MB_ICONINFORMATION);
+                    }
+                }
                 break;
             case 'N':
                 // Ctrl+N = New note

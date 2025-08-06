@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "Layout.h"
+#include "ModernUI.h"
 
 const char* Window::CLASS_NAME = "DevNotesApp";
 
@@ -10,7 +11,7 @@ bool Window::Initialize(HINSTANCE hInstance)
     wc.lpfnWndProc = WindowProc;
     wc.hInstance = hInstance;
     wc.lpszClassName = CLASS_NAME;
-    wc.hbrBackground = CreateSolidBrush(RGB(37, 39, 42)); // Dark theme moderno
+    wc.hbrBackground = CreateSolidBrush(RGB(25, 26, 28)); // Dark theme moderno come ModernUI
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
     wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
     wc.lpszMenuName = NULL;
@@ -72,6 +73,42 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
         case ID_MENU_OPEN_NOTE:
             MessageBox(hwnd, "Apri nota - Coming soon!", "DevNotes", MB_OK | MB_ICONINFORMATION);
             break;
+        }
+        break;
+
+    case WM_KEYDOWN:
+        // Controlla se Ctrl è premuto
+        if (GetKeyState(VK_CONTROL) & 0x8000)
+        {
+            switch (wParam)
+            {
+            case 'R':
+                // Ctrl+R = Reload UI (come nei browser web)
+                Layout::Cleanup();
+                Layout::CreateModernFonts();
+                Layout::CreateDevNotesLayout(hwnd);
+                InvalidateRect(hwnd, NULL, TRUE);
+                MessageBox(hwnd, "UI Reloaded! Premi Ctrl+R per ricaricare modifiche.", "DevNotes", MB_OK | MB_ICONINFORMATION);
+                break;
+            case 'N':
+                // Ctrl+N = New note
+                MessageBox(hwnd, "Nuova nota - Coming soon!", "DevNotes", MB_OK | MB_ICONINFORMATION);
+                break;
+            case 'F':
+                // Ctrl+F = Search
+                MessageBox(hwnd, "Ricerca globale - Coming soon!", "DevNotes", MB_OK | MB_ICONINFORMATION);
+                break;
+            }
+        }
+        else
+        {
+            switch (wParam)
+            {
+            case VK_F6:
+                // F6 = Toggle theme
+                MessageBox(hwnd, "Theme toggle - Coming soon!", "DevNotes", MB_OK | MB_ICONINFORMATION);
+                break;
+            }
         }
         break;
 

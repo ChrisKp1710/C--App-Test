@@ -10,12 +10,12 @@ SRCDIR = src
 INCDIR = include
 OBJDIR = obj
 
-# File sorgenti - DevNotes modularizzato
-SOURCES = src/main_new.cpp src/Window.cpp src/Layout.cpp
+# File sorgenti - DevNotes modularizzato  
+SOURCES = src/main_new.cpp src/Window.cpp src/Layout.cpp src/ModernUI.cpp
 OBJECTS = $(SOURCES:src/%.cpp=$(OBJDIR)/%.o)
 
-# Flag di compilazione per UI moderna
-CXXFLAGS = -std=c++17 -Wall -Wextra -I$(INCDIR) -DUNICODE -D_UNICODE
+# Flag di compilazione per UI moderna (senza UNICODE per ora)
+CXXFLAGS = -std=c++17 -Wall -Wextra -I$(INCDIR)
 LDFLAGS = -lgdi32 -luser32 -lkernel32 -lcomctl32 -luxtheme
 
 # Flag per release/debug
@@ -30,13 +30,11 @@ all: $(TARGET)
 
 # Crea la directory obj se non esiste
 $(OBJDIR):
-	@if not exist "$(OBJDIR)" mkdir "$(OBJDIR)"
+	powershell -Command "if (-not (Test-Path $(OBJDIR))) { New-Item -Path $(OBJDIR) -ItemType Directory }"
 
 # Compila l'eseguibile
 $(TARGET): $(OBJDIR) $(OBJECTS)
 	$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
-	@echo.
-	@echo Compilazione completata! Eseguibile: $(TARGET)
 
 # Compila i file oggetto
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp

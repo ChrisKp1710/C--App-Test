@@ -1,7 +1,28 @@
 #include "Layout.h"
+#include "ModernUI.h"
+
+void Layout::Cleanup()
+{
+    // Distruggi i controlli esistenti se presenti
+    if (hSidebarLeft) DestroyWindow(hSidebarLeft);
+    if (hEditorMain) DestroyWindow(hEditorMain);
+    if (hPanelRight) DestroyWindow(hPanelRight);
+    if (hStatusBar) DestroyWindow(hStatusBar);
+    
+    // Reset handles
+    hSidebarLeft = hEditorMain = hPanelRight = hStatusBar = NULL;
+    
+    // Distruggi i font
+    if (hFontUI) DeleteObject(hFontUI);
+    if (hFontEditor) DeleteObject(hFontEditor);
+    hFontUI = hFontEditor = NULL;
+}
 
 void Layout::CreateModernFonts()
 {
+    // Inizializza tema moderno
+    ModernUI::InitializeTheme();
+    
     // Font per UI - Segoe UI più grande
     hFontUI = CreateFont(
         -16,                        // Altezza maggiore
@@ -41,51 +62,51 @@ void Layout::CreateModernFonts()
 
 void Layout::CreateDevNotesLayout(HWND hwnd)
 {
-    // Sidebar sinistra - File Explorer con stile moderno
+    // Sidebar sinistra - File Explorer con stile migliorato
     hSidebarLeft = CreateWindowEx(
-        0, // Rimuovi bordo 3D
+        0, // Bordi più sottili
         "LISTBOX",
         "",
         WS_CHILD | WS_VISIBLE | WS_VSCROLL | LBS_HASSTRINGS | LBS_NOTIFY,
-        5, 5, SIDEBAR_WIDTH-5, 400, // Padding moderno
+        8, 8, SIDEBAR_WIDTH-16, 400, // Più padding
         hwnd,
         (HMENU)ID_SIDEBAR_LEFT,
         hInst,
         NULL
     );
 
-    // Editor principale - Area centrale con bordi sottili
+    // Editor principale - Area centrale 
     hEditorMain = CreateWindowEx(
-        0, // Rimuovi bordo 3D 
+        WS_EX_CLIENTEDGE, // Bordo sottile elegante
         "EDIT",
-        "# Benvenuto in DevNotes\n\nInizia a scrivere la tua prima nota...\n\n## Features\n- [[Link]] tra note\n- #tags organizzazione\n- **Markdown** formatting\n\n> Quote di esempio\n\n```cpp\n// Code block esempio\nint main() {\n    return 0;\n}\n```",
+        "# Benvenuto in DevNotes\n\nInizia a scrivere la tua prima nota...\n\n## Features\n- [[Link]] tra note\n- #tags organizzazione\n- **Markdown** formatting\n\n> Quote di esempio\n\n```cpp\n// Code block esempio\nint main() {\n    return 0;\n}\n```\n\n## Links\n- [[Welcome]] - Pagina di benvenuto\n- [[Ideas]] - Le tue idee\n\n## Tags\n#devnotes #markdown #knowledge",
         WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | 
         ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN,
-        SIDEBAR_WIDTH+5, 5, 400, 400, // Padding moderno
+        SIDEBAR_WIDTH + 8, 8, 400, 400, 
         hwnd,
         (HMENU)ID_EDITOR_MAIN,
         hInst,
         NULL
     );
 
-    // Panel destro - Backlinks/Graph con stile moderno
+    // Panel destro - Backlinks/Graph
     hPanelRight = CreateWindowEx(
-        0, // Rimuovi bordo 3D
+        WS_EX_CLIENTEDGE, // Bordo elegante
         "STATIC",
-        "Backlinks & Graph\n\n🔗 Collegamenti:\n• [[Welcome]]\n• [[Ideas]]\n\n🏷️ Tags utilizzati:\n• #devnotes\n• #markdown\n\n📊 Statistiche:\n• 1 nota attiva\n• 247 parole\n• Ultima modifica: ora",
+        "📊 Backlinks & Graph\n\n🔗 Collegamenti in entrata:\n→ [[Welcome]] (2 references)\n→ [[Ideas]] (1 reference)\n\n🏷️ Tags utilizzati:\n→ #devnotes (3 notes)\n→ #markdown (2 notes)\n→ #knowledge (1 note)\n\n� Statistiche:\n→ 1 nota attiva\n→ 247 parole totali\n→ Ultima modifica: ora\n→ 3 collegamenti\n\n🎯 Quick Actions:\n→ Nuova nota [Ctrl+N]\n→ Ricerca globale [Ctrl+F]\n→ Graph view [Ctrl+G]",
         WS_CHILD | WS_VISIBLE | SS_LEFT,
-        600, 5, PANEL_RIGHT_WIDTH-5, 400, // Padding moderno
+        600, 8, PANEL_RIGHT_WIDTH-16, 400,
         hwnd,
         (HMENU)ID_PANEL_RIGHT,
         hInst,
         NULL
     );
 
-    // Status bar moderno
+    // Status bar
     hStatusBar = CreateWindow(
         STATUSCLASSNAME,
         "",
-        WS_CHILD | WS_VISIBLE,
+        WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP,
         0, 0, 0, 0,
         hwnd,
         (HMENU)ID_STATUSBAR,
@@ -93,7 +114,7 @@ void Layout::CreateDevNotesLayout(HWND hwnd)
         NULL
     );
 
-    // Applica i font moderni
+    // Applica i font moderni (SENZA subclassing per ora)
     if (hFontUI)
     {
         SendMessage(hSidebarLeft, WM_SETFONT, (WPARAM)hFontUI, TRUE);
@@ -106,18 +127,28 @@ void Layout::CreateDevNotesLayout(HWND hwnd)
         SendMessage(hEditorMain, WM_SETFONT, (WPARAM)hFontEditor, TRUE);
     }
 
-    // Popola la sidebar con file di esempio più moderni
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"📁 My Notes");
+    // TODO: Rimettere custom styling quando sarà corretto
+    // ModernUI::OriginalListBoxProc = (WNDPROC)SetWindowLongPtr(hSidebarLeft, GWLP_WNDPROC, (LONG_PTR)ModernUI::ModernListBoxProc);
+    // ModernUI::OriginalEditProc = (WNDPROC)SetWindowLongPtr(hEditorMain, GWLP_WNDPROC, (LONG_PTR)ModernUI::ModernEditProc);
+    // ModernUI::OriginalStaticProc = (WNDPROC)SetWindowLongPtr(hPanelRight, GWLP_WNDPROC, (LONG_PTR)ModernUI::ModernStaticProc);
+
+    // Popola la sidebar con contenuto più ricco
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"📁 My Notes (4)");
     SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Welcome.md");
     SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Daily Notes.md");
     SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Project Ideas.md");
     SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Code Snippets.md");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"📁 Archive");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"📁 Templates");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"📁 Archive (2)");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Old Notes.md");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Experiments.md");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"📁 Templates (3)");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📄 Meeting Template");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📄 Project Template");
     SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"🔗 Quick Links");
+    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"🔍 Recent Searches");
 
-    // Imposta status bar moderno
-    SendMessage(hStatusBar, SB_SETTEXT, 0, (LPARAM)"🚀 DevNotes v1.0 | Ready | 247 words | Obsidian-style knowledge management");
+    // Status bar più informativo
+    SendMessage(hStatusBar, SB_SETTEXT, 0, (LPARAM)"🚀 DevNotes v1.0 | Ready | 247 words | 3 links | Last saved: now | Obsidian-style knowledge management");
 
     // Focus sull'editor
     SetFocus(hEditorMain);
@@ -133,22 +164,22 @@ void Layout::ResizeLayoutPanels(HWND hwnd)
     int contentHeight = height - STATUSBAR_HEIGHT;
     int editorWidth = width - SIDEBAR_WIDTH - PANEL_RIGHT_WIDTH;
 
-    // Ridimensiona sidebar sinistra con padding
+    // Ridimensiona sidebar sinistra con padding elegante
     SetWindowPos(hSidebarLeft, NULL, 
-        5, 5, 
-        SIDEBAR_WIDTH - 10, contentHeight - 10, 
+        8, 8, 
+        SIDEBAR_WIDTH - 16, contentHeight - 16, 
         SWP_NOZORDER);
 
     // Ridimensiona editor centrale con padding
     SetWindowPos(hEditorMain, NULL, 
-        SIDEBAR_WIDTH + 5, 5, 
-        editorWidth - 10, contentHeight - 10, 
+        SIDEBAR_WIDTH + 8, 8, 
+        editorWidth - 16, contentHeight - 16, 
         SWP_NOZORDER);
 
-    // Ridimensiona panel destro con padding
+    // Ridimensiona panel destro con padding  
     SetWindowPos(hPanelRight, NULL, 
-        SIDEBAR_WIDTH + editorWidth + 5, 5, 
-        PANEL_RIGHT_WIDTH - 10, contentHeight - 10, 
+        SIDEBAR_WIDTH + editorWidth + 8, 8, 
+        PANEL_RIGHT_WIDTH - 16, contentHeight - 16, 
         SWP_NOZORDER);
 
     // Ridimensiona status bar
@@ -156,11 +187,4 @@ void Layout::ResizeLayoutPanels(HWND hwnd)
         0, contentHeight, 
         width, STATUSBAR_HEIGHT, 
         SWP_NOZORDER);
-}
-
-void Layout::Cleanup()
-{
-    // Cleanup fonts
-    if (hFontUI) DeleteObject(hFontUI);
-    if (hFontEditor) DeleteObject(hFontEditor);
 }

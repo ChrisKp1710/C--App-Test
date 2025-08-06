@@ -1,0 +1,84 @@
+# Qt Build Files
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.stash
+
+# Build directories
+build/
+build-*/
+debug/
+release/
+obj/
+bin/
+
+# Generated files
+Makefile*
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.app
+
+# Qt specific
+*.qm
+.qmake.cache
+.qmake.stash
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Temporary files
+*~
+*.tmp
+*.temp
+*.swp
+*.swo
+.DS_Store
+
+# Qt resource cache
+resources.qrc.depends
+qrc_resources.cpp
+
+# Debug and release folders
+Debug/
+Release/
+
+# MinGW
+*.a
+*.la
+*.lai
+*.so.*
+
+# CMake (if used)
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+
+# IDE files
+*.user
+*.pro.user.*
+*.creator
+*.creator.user*
+*.includes
+*.files
+*.config
+*.cflags
+*.cxxflags

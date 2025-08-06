@@ -1,249 +1,54 @@
-#include "Common.h"
-#include "Window.h"
-#include "Layout.h"
+#include <QtGui/QGuiApplication>
+#include <QtQml/QQmlApplicationEngine>
+#include <QtQml/QQmlContext>
+#include <QDebug>
+#include "core/ApplicationCore.h"
+#include "models/DocumentModel.h"
+#include "models/FileSystemModel.h"
 
-// Definizione delle variabili globali
-HINSTANCE hInst;
-HWND hMainWindow;
-HWND hSidebarLeft;
-HWND hEditorMain;
-HWND hPanelRight;
-HWND hStatusBar;
-HFONT hFontUI;
-HFONT hFontEditor;
-
-// Punto di ingresso dell'applicazione
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int main(int argc, char *argv[])
 {
-    // Evita warning per parametri non usati
-    (void)hPrevInstance;
-    (void)lpCmdLine;
+    QGuiApplication app(argc, argv);
     
-    hInst = hInstance;
-
-    // Inizializza la finestra principale
-    if (!Window::Initialize(hInstance))
-    {
-        MessageBox(NULL, "Errore nell'inizializzazione di DevNotes!", "Errore", MB_OK | MB_ICONERROR);
+    qDebug() << "🚀 DevNotes Starting...";
+    
+    // Configurazione applicazione
+    app.setApplicationName("DevNotes");
+    app.setApplicationVersion("1.0.0");
+    app.setOrganizationName("Windows Helper Solutions");
+    
+    qDebug() << "📝 Registering QML types...";
+    
+    // Registrazione tipi QML
+    qmlRegisterType<DocumentModel>("DevNotes", 1, 0, "DocumentModel");
+    qmlRegisterType<FileSystemModel>("DevNotes", 1, 0, "FileSystemModel");
+    
+    // Creazione core dell'applicazione
+    ApplicationCore core;
+    
+    qDebug() << "🔧 Creating QML engine...";
+    
+        // Imposta il motore QML
+    QQmlApplicationEngine engine;
+    
+    // Imposta lo stile QML per evitare avvertimenti di personalizzazione
+    qputenv("QT_QUICK_CONTROLS_STYLE", "Basic");
+    
+    // Esposizione del core al QML
+    engine.rootContext()->setContextProperty("applicationCore", &core);
+    
+    qDebug() << "📱 Loading QML...";
+    
+    // Caricamento interfaccia principale
+    engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
+    
+    if (engine.rootObjects().isEmpty()) {
+        qDebug() << "❌ Failed to load QML!";
         return -1;
     }
-
-    // Mostra la finestra
-    Window::Show(nCmdShow);
-
-    // Loop dei messaggi
-    return Window::MessageLoop();
-}
-
-// Procedura per gestire i messaggi della finestra - DevNotes
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    switch (uMsg)
-    {
-    case WM_CREATE:
-        CreateModernFonts();
-        CreateDevNotesLayout(hwnd);
-        break;
-
-    case WM_COMMAND:
-        switch (LOWORD(wParam))
-        {
-        case ID_MENU_NEW_NOTE:
-            // TODO: Implementare creazione nuova nota
-            MessageBox(hwnd, "Nuova nota - Coming soon!", "DevNotes", MB_OK | MB_ICONINFORMATION);
-            break;
-        case ID_MENU_OPEN_NOTE:
-            // TODO: Implementare apertura nota
-            MessageBox(hwnd, "Apri nota - Coming soon!", "DevNotes", MB_OK | MB_ICONINFORMATION);
-            break;
-        }
-        break;
-
-    case WM_SIZE:
-        ResizeLayoutPanels(hwnd);
-        break;
-
-    case WM_DESTROY:
-        // Cleanup fonts
-        if (hFontUI) DeleteObject(hFontUI);
-        if (hFontEditor) DeleteObject(hFontEditor);
-        PostQuitMessage(0);
-        return 0;
-
-    default:
-        return DefWindowProc(hwnd, uMsg, wParam, lParam);
-    }
-    return 0;
-}
-
-// Crea i font moderni per DevNotes
-void CreateModernFonts()
-{
-    // Font per UI - Segoe UI più grande
-    hFontUI = CreateFont(
-        -16,                        // Altezza maggiore
-        0,                          // Larghezza
-        0,                          // Escapement
-        0,                          // Orientation
-        FW_NORMAL,                  // Weight
-        FALSE,                      // Italic
-        FALSE,                      // Underline
-        FALSE,                      // StrikeOut
-        DEFAULT_CHARSET,            // CharSet
-        OUT_DEFAULT_PRECIS,         // OutPrecision
-        CLIP_DEFAULT_PRECIS,        // ClipPrecision
-        CLEARTYPE_QUALITY,          // Quality
-        DEFAULT_PITCH | FF_DONTCARE, // PitchAndFamily
-        "Segoe UI"                  // Font name
-    );
-
-    // Font per editor - Consolas più grande
-    hFontEditor = CreateFont(
-        -18,                        // Altezza maggiore
-        0,                          // Larghezza
-        0,                          // Escapement
-        0,                          // Orientation
-        FW_NORMAL,                  // Weight
-        FALSE,                      // Italic
-        FALSE,                      // Underline
-        FALSE,                      // StrikeOut
-        DEFAULT_CHARSET,            // CharSet
-        OUT_DEFAULT_PRECIS,         // OutPrecision
-        CLIP_DEFAULT_PRECIS,        // ClipPrecision
-        CLEARTYPE_QUALITY,          // Quality
-        FIXED_PITCH | FF_MODERN,    // PitchAndFamily
-        "Consolas"                  // Font name
-    );
-}
-
-// Crea il layout a 3 pannelli stile Obsidian
-void CreateDevNotesLayout(HWND hwnd)
-{
-    // Sidebar sinistra - File Explorer con stile moderno
-    hSidebarLeft = CreateWindowEx(
-        0, // Rimuovi bordo 3D
-        "LISTBOX",
-        "",
-        WS_CHILD | WS_VISIBLE | WS_VSCROLL | LBS_HASSTRINGS | LBS_NOTIFY | LBS_OWNERDRAWFIXED,
-        5, 5, SIDEBAR_WIDTH-5, 400, // Padding moderno
-        hwnd,
-        (HMENU)ID_SIDEBAR_LEFT,
-        hInst,
-        NULL
-    );
-
-    // Editor principale - Area centrale con bordi sottili
-    hEditorMain = CreateWindowEx(
-        0, // Rimuovi bordo 3D 
-        "EDIT",
-        "# Benvenuto in DevNotes\n\nInizia a scrivere la tua prima nota...\n\n## Features\n- [[Link]] tra note\n- #tags organizzazione\n- **Markdown** formatting\n\n> Quote di esempio\n\n```cpp\n// Code block esempio\nint main() {\n    return 0;\n}\n```",
-        WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | 
-        ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN,
-        SIDEBAR_WIDTH+5, 5, 400, 400, // Padding moderno
-        hwnd,
-        (HMENU)ID_EDITOR_MAIN,
-        hInst,
-        NULL
-    );
-
-    // Panel destro - Backlinks/Graph con stile moderno
-    hPanelRight = CreateWindowEx(
-        0, // Rimuovi bordo 3D
-        "STATIC",
-        "Backlinks & Graph\n\n🔗 Collegamenti:\n• [[Welcome]]\n• [[Ideas]]\n\n🏷️ Tags utilizzati:\n• #devnotes\n• #markdown\n\n📊 Statistiche:\n• 1 nota attiva\n• 247 parole\n• Ultima modifica: ora",
-        WS_CHILD | WS_VISIBLE | SS_LEFT,
-        600, 5, PANEL_RIGHT_WIDTH-5, 400, // Padding moderno
-        hwnd,
-        (HMENU)ID_PANEL_RIGHT,
-        hInst,
-        NULL
-    );
-
-    // Status bar moderno
-    hStatusBar = CreateWindow(
-        STATUSCLASSNAME,
-        "",
-        WS_CHILD | WS_VISIBLE,
-        0, 0, 0, 0,
-        hwnd,
-        (HMENU)ID_STATUSBAR,
-        hInst,
-        NULL
-    );
-
-    // Applica i font moderni
-    if (hFontUI)
-    {
-        SendMessage(hSidebarLeft, WM_SETFONT, (WPARAM)hFontUI, TRUE);
-        SendMessage(hPanelRight, WM_SETFONT, (WPARAM)hFontUI, TRUE);
-        SendMessage(hStatusBar, WM_SETFONT, (WPARAM)hFontUI, TRUE);
-    }
     
-    if (hFontEditor)
-    {
-        SendMessage(hEditorMain, WM_SETFONT, (WPARAM)hFontEditor, TRUE);
-    }
-
-    // Popola la sidebar con file di esempio più moderni
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"📁 My Notes");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Welcome.md");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Daily Notes.md");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  📝 Project Ideas.md");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"  � Code Snippets.md");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"�📁 Archive");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"📁 Templates");
-    SendMessage(hSidebarLeft, LB_ADDSTRING, 0, (LPARAM)"🔗 Quick Links");
-
-    // Imposta status bar moderno
-    SendMessage(hStatusBar, SB_SETTEXT, 0, (LPARAM)"🚀 DevNotes v1.0 | Ready | 247 words | Obsidian-style knowledge management");
-
-    // Focus sull'editor
-    SetFocus(hEditorMain);
-}
-
-// Ridimensiona i pannelli quando la finestra cambia dimensione
-void ResizeLayoutPanels(HWND hwnd)
-{
-    RECT rect;
-    GetClientRect(hwnd, &rect);
+    qDebug() << "✅ QML loaded successfully!";
+    qDebug() << "🎬 Starting event loop...";
     
-    int width = rect.right - rect.left;
-    int height = rect.bottom - rect.top;
-    int contentHeight = height - STATUSBAR_HEIGHT;
-    int editorWidth = width - SIDEBAR_WIDTH - PANEL_RIGHT_WIDTH;
-
-    // Ridimensiona sidebar sinistra con padding
-    SetWindowPos(hSidebarLeft, NULL, 
-        5, 5, 
-        SIDEBAR_WIDTH - 10, contentHeight - 10, 
-        SWP_NOZORDER);
-
-    // Ridimensiona editor centrale con padding
-    SetWindowPos(hEditorMain, NULL, 
-        SIDEBAR_WIDTH + 5, 5, 
-        editorWidth - 10, contentHeight - 10, 
-        SWP_NOZORDER);
-
-    // Ridimensiona panel destro con padding
-    SetWindowPos(hPanelRight, NULL, 
-        SIDEBAR_WIDTH + editorWidth + 5, 5, 
-        PANEL_RIGHT_WIDTH - 10, contentHeight - 10, 
-        SWP_NOZORDER);
-
-    // Ridimensiona status bar
-    SetWindowPos(hStatusBar, NULL, 
-        0, contentHeight, 
-        width, STATUSBAR_HEIGHT, 
-        SWP_NOZORDER);
-}
-
-// Inizializzazione DevNotes
-void InitializeDevNotes()
-{
-    // TODO: Carica configurazione
-    // TODO: Scan directory notes
-    // TODO: Carica ultima nota aperta
-    
-    // Per ora mostra messaggio di benvenuto
-    SetWindowText(hStatusBar, "DevNotes avviato con successo!");
+    return app.exec();
 }
